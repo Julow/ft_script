@@ -6,7 +6,7 @@
 /*   By: jaguillo <jaguillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/03 13:07:18 by jaguillo          #+#    #+#             */
-/*   Updated: 2015/03/03 17:14:01 by jaguillo         ###   ########.fr       */
+/*   Updated: 2015/03/05 17:23:30 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,14 @@ static char		*get_shell(void)
 int				main(int argc, char **argv)
 {
 	pid_t			pid;
+	t_env			env;
 
 	ft_putstr("Start script\n");
 	pid = fork();
 	if (pid == 0)
-		exec_shell(get_shell());
+		exec_shell(&env, get_shell());
 	else
-		start_script();
+		start_script(&env);
 	ft_putstr("End script\n");
 	(void)argc;
 	(void)argv;
