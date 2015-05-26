@@ -1,109 +1,85 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: jaguillo <jaguillo@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2015/03/03 13:10:05 by jaguillo          #+#    #+#              #
-#    Updated: 2015/03/03 17:14:05 by jaguillo         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+#
+# ft_script
+#
+# Makefile
+#
 
 #
 # Config
 #
-# Accepted exernal vars:
-#  DEBUG_MODE	(0)		Enable debug mode
-#
 
-NAME = ft_script
+# Project name
+NAME := ft_script
 
-H_DIR = h
-C_DIR = srcs
-O_DIR = o
+# Project directories
+DIRS := srcs h
 
-# GCC flags
-LINKS = -I$(H_DIR) -Ilibft/ -Llibft/ -lft
+# Obj directory
+O_DIR := o
 
-FLAGS = -Wall -Wextra -Werror -O2
-DEBUG_FLAGS = -Wall -Wextra -g -D DEBUG_MODE
+# Makefiles to call
+LIBS := libft
 
-# Dirs containing a Makefile to execute (all, clean and fclean)
-MAKES = libft/
+# Number of threads
+THREADS := 1
+
+# C compiler
+C_CC := clang
+
+# Linking compiler
+LD_CC := clang
+
+# Clang flags
+C_FLAGS := -Wall -Wextra -Werror -O2
+
+# Linking flags
+LD_FLAGS := -Llibft -lft
+
+# Clang include flags
+C_HEADS := -Ilibft -Ih
+
+MAKEMAKE_TMP := tmp_makemake.py
 
 #
 # Internal
 #
 
-ifeq ($(DEBUG_MODE),)
-	export DEBUG_MODE = 0
-endif
+O_FILES := o/srcs/main.o
 
-ifeq ($(DEBUG_MODE),1)
-	FLAGS = $(DEBUG_FLAGS)
-endif
+MSG_0 := printf '\033[0;32m%-13.13s\033[0;0m\r'
+MSG_1 := printf '\033[0;31m%-13.13s\033[0;0m\n'
+MSG_END := printf '\n'
 
-C_FILES = $(shell find $(C_DIR) -type f -print | grep "\.c")
-C_DIRS = $(shell find $(C_DIR) -type d -print)
+.SILENT:
 
-O_DIRS = $(C_DIRS:$(C_DIR)/%=$(O_DIR)/%)
-O_FILES = $(C_FILES:$(C_DIR)/%.c=$(O_DIR)/%.o)
+all: $(LIBS) $(NAME)
+.PHONY: all
 
-# Default rule
-# Build sub-makefiles and the project
-all:
-	@$(foreach lib,$(MAKES),make -C $(lib);)
-	@make -j4 $(NAME)
-
-# Build the project
 $(NAME): $(O_FILES)
-	@gcc $(FLAGS) -o $@ $^ $(LINKS) && printf "\033[0;32m" || printf "\033[0;31m"
-	@printf "%-34s \033[1;30m<<--\033[0;0m\n" "$@"
+	@$(MSG_0) $@ ; $(LD_CC) -o $@ $(O_FILES) $(LD_FLAGS) && $(MSG_END) || $(MSG_1) $@
 
-# Compile a source file
-$(O_DIR)/%.o: $(C_DIR)/%.c $(H_DIR) $(MAKES)
-	@mkdir -p $(O_DIRS) $(O_DIR) 2> /dev/null || echo "" > /dev/null
-	@gcc $(FLAGS) $(LINKS) -o $@ -c $< \
-	&& printf "\033[0;0m%-34s\033[1;30m -->>\t\033[0;32m$@\033[0;0m\n" "$<" \
-	|| (printf "\033[0;0m%-34s\033[1;30m -->>\t\033[0;31m$@\033[0;0m\n" "$<" \
-		&& exit 1)
+o/srcs/main.o: srcs/main.c h/ft_script.h
+	@mkdir -p o/srcs 2> /dev/null || true
+	@$(MSG_0) $< ; clang $(C_FLAGS) $(C_HEADS) -c -o $@ $< || ($(MSG_1) $< && false)
 
-# Enable debug mode and build all
-debug: _debug all
+$(LIBS):
+	@make -C $@
+.PHONY: $(LIBS)
 
-# Clean all objects files and sub-makefiles
-clean: _clean
-	@$(foreach lib,$(MAKES),make -C $(lib) clean;)
+clean:
+	@rm -f $(O_FILES) 2> /dev/null || true
+	@rmdir -p o/srcs $(O_DIR) 2> /dev/null || true
+.PHONY: clean
 
-# Clean all compiled files and sub-makefiles
-fclean: _fclean
-	@$(foreach lib,$(MAKES),make -C $(lib) fclean;)
+fclean: clean
+	@rm -f $(NAME)
+.PHONY: fclean
 
-# Clean all and rebuild
 re: fclean all
+.PHONY: re
 
-# Clean all, enable debug mode and rebuild
-rebug: fclean debug
-
-# Clean objects files
-_clean:
-	@rm $(O_FILES) 2> /dev/null || echo "" > /dev/null
-	@rmdir $(O_DIRS) $(O_DIR) 2> /dev/null || echo "" > /dev/null
-
-# Clean compiled files
-_fclean: _clean
-	@rm $(NAME) 2> /dev/null || echo "" > /dev/null
-
-# Clean compiled files rebuild
-_re: _fclean all
-
-# Clean compiled files, enable debug mode and rebuild
-_rebug: _fclean debug
-
-# Enable debug mode
-_debug:
-	$(eval FLAGS = $(DEBUG_FLAGS))
-	$(eval DEBUG_MODE = 1)
-
-.PHONY: all debug clean fclean re rebug _clean _fclean _re _rebug _debug
+make: fclean
+	@curl -f https://raw.githubusercontent.com/Julow/makemake/master/makemake.py > $(MAKEMAKE_TMP)
+	@python $(MAKEMAKE_TMP)
+	@rm -f $(MAKEMAKE_TMP)
+.PHONY: make
