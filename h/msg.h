@@ -6,7 +6,7 @@
 /*   By: juloo <juloo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/26 13:31:24 by juloo             #+#    #+#             */
-/*   Updated: 2015/05/26 13:49:28 by juloo            ###   ########.fr       */
+/*   Updated: 2015/05/26 16:30:44 by juloo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@
 
 # define E_OPT			NAME ": invalid option -- '%s'" ENDL
 
-# define E_FILE			NAME ": %s: %s" ENDL
+# define MSG			NAME ": %s" ENDL
+# define ERR			NAME ": %s: %s" ENDL
+# define E_ERR			NAME ": Error: %s" ENDL
 
 # define M_RIGHT		"Permission denied"
 # define M_ISDIR		"Is a directory"
