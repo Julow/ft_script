@@ -6,7 +6,7 @@
 #    By: jaguillo <jaguillo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/03 13:05:11 by jaguillo          #+#    #+#              #
-#    Updated: 2015/02/27 13:31:14 by jaguillo         ###   ########.fr        #
+#    Updated: 2015/04/24 01:20:36 by juloo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -70,20 +70,22 @@ C_DIRS = $(shell find $(C_DIR) -depth -type d -print)
 
 # Build .o list
 O_DIRS = $(C_DIRS:$(C_DIR)/%=$(O_DIR)/%)
-TMP = $(C_FILES:$(C_DIR)/%.c=$(O_DIR)/%.o)
-O_FILES = $(TMP:$(C_DIR)/%.s=$(O_DIR)/%.o)
+O_DIR_TMP = $(C_FILES:$(C_DIR)/%.c=$(O_DIR)/%.o)
+O_FILES = $(O_DIR_TMP:$(C_DIR)/%.s=$(O_DIR)/%.o)
 
 # Create O_DIR and childs
 $(shell mkdir -p $(O_DIRS) $(O_DIR) 2> /dev/null || echo "" > /dev/null)
 
 # Print
-MSG_0 = "%-34s\033[1;30m -->>  \033[0;32m%s\033[0;0m\n"
-MSG_1 = "%-34s\033[1;30m -->>  \033[0;31m%s\033[0;0m\n"
-MSG_2 = "%-34s\033[1;30m <<--\033[0;0m\n"
+MSG_0 = "%40c\r\033[0;32m%s\033[0;0m\r" " "
+MSG_1 = "\033[0;31m%s\033[0;0m\n"
+MSG_2 = "\r%40c\r%s\033[0;0m\n" " "
 
 # Call $(NAME) in async mode
 all:
-	@make -j4 $(NAME)
+	@(tput civis || true)
+	@(make -j4 $(NAME) || true)
+	@(tput cnorm || true)
 
 # Compile all sources and build the .a archive
 $(NAME): $(O_FILES)
@@ -96,23 +98,27 @@ ifneq ($(shell nasm -v 2> /dev/null),)
 ifneq ($(shell nasm -hf | grep "$(ASM_FORMAT)"),)
 $(O_DIR)/%.o: $(C_DIR)/%.s
 	@nasm $(ASM_SPECIAL) $(ASM_FLAGS) -o $@ $< \
-		&& printf $(MSG_0) "$<" "$@" || (printf $(MSG_1) "$<" "$@" && exit 1)
+		&& printf $(MSG_0) "$<" || (printf $(MSG_1) "$<" && exit 1)
 endif
 endif
 endif
 
 # Compile .c sources
 $(O_DIR)/%.o: $(C_DIR)/%.c
-	@gcc $(C_FLAGS) $(LINKS) -o $@ -c $< \
-		&& printf $(MSG_0) "$<" "$@" || (printf $(MSG_1) "$<" "$@" && exit 1)
+	@clang $(C_FLAGS) $(LINKS) -o $@ -c $< \
+		&& printf $(MSG_0) "$<" || (printf $(MSG_1) "$<" && exit 1)
 
 # Enable debug mode, change flags and build
 debug: _debug all
 
 # Remove all .o files
 clean:
+	@(tput civis || true)
+	@printf "Clearing..."
 	@rm $(O_FILES) 2> /dev/null || echo "" > /dev/null
 	@rmdir $(O_DIRS) $(O_DIR) 2> /dev/null || echo "" > /dev/null
+	@printf "\r%40c\r" " "
+	@(tput cnorm || true)
 
 # Remove all .o files and the .a archive
 fclean: clean
