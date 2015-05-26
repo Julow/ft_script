@@ -6,7 +6,7 @@
 /*   By: jaguillo <jaguillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/03 13:06:59 by jaguillo          #+#    #+#             */
-/*   Updated: 2015/05/26 17:18:13 by juloo            ###   ########.fr       */
+/*   Updated: 2015/05/26 23:46:03 by juloo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,18 +47,13 @@ typedef struct	s_env
 	int				flags;
 	char			*out_file;
 	char			**cmd;
-	struct termios	term_save;
 	t_out			out;
-	int				in_fd;
 }				t_env;
 
 # define FLAG_A		(1 << 1)
 # define FLAG_Q		(1 << 2)
 
 t_bool			parse_argv(t_env *env, int argc, char **argv);
-
-t_bool			init_term(t_env *env);
-void			restore_term(t_env *env);
 
 t_bool			start_script(t_env *env);
 
