@@ -6,7 +6,7 @@
 /*   By: jaguillo <jaguillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/03 13:06:59 by jaguillo          #+#    #+#             */
-/*   Updated: 2015/05/26 23:46:03 by juloo            ###   ########.fr       */
+/*   Updated: 2015/05/27 12:31:05 by juloo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,9 @@
 # define WRITE_O		(O_WRONLY | O_CREAT | O_TRUNC)
 # define APPEND_O		(O_WRONLY | O_CREAT | O_APPEND)
 # define MODE_O			(S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH)
+
+# define PIPE_W			1
+# define PIPE_R			0
 
 typedef struct	s_env
 {
