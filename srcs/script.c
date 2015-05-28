@@ -6,7 +6,7 @@
 /*   By: juloo <juloo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/26 16:28:38 by juloo             #+#    #+#             */
-/*   Updated: 2015/05/28 14:27:03 by jaguillo         ###   ########.fr       */
+/*   Updated: 2015/05/28 18:06:26 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,13 @@ static void		exec_cmd(t_env *env)
 	}
 }
 
-static void		read_script(t_env *env, pid_t pid, int master)
+static void		read_script(t_env *env, int master)
 {
 	fd_set			read_fds;
 	int				len;
 	char			buff[INPUT_BUFFER];
 
-	while (waitpid(pid, NULL, WNOHANG) == 0)
+	while (true)
 	{
 		FD_ZERO(&read_fds);
 		FD_SET(0, &read_fds);
@@ -52,21 +52,20 @@ static void		read_script(t_env *env, pid_t pid, int master)
 			return (ft_fdprintf(2, E_ERR, "Cannot select"), VOID);
 		if (FD_ISSET(0, &read_fds))
 		{
-			if ((len = read(0, buff, INPUT_BUFFER)) < 0)
-				return (ft_fdprintf(2, E_ERR, "Cannot read tty"), VOID);
+			if ((len = read(0, buff, INPUT_BUFFER)) <= 0)
+				break ;
 			write(master, buff, len);
 			ft_write(&(env->out), buff, len);
-			ft_flush(&(env->out));
 		}
 		if (FD_ISSET(master, &read_fds))
 		{
-			if ((len = read(master, buff, INPUT_BUFFER)) < 0)
-				return (ft_fdprintf(2, E_ERR, "Cannot read tty"), VOID);
+			if ((len = read(master, buff, INPUT_BUFFER)) <= 0)
+				break ;
 			write(1, buff, len);
 			ft_write(&(env->out), buff, len);
-			ft_flush(&(env->out));
 		}
 	}
+	ft_flush(&(env->out));
 }
 
 t_bool			start_script(t_env *env)
@@ -75,7 +74,7 @@ t_bool			start_script(t_env *env)
 	int				slave;
 	pid_t			pid;
 
-	if (!ft_openpt(&master, &slave) || !init_term(env, slave))
+	if (!ft_openpt(&master, &slave) || !init_term(env))
 		return (false);
 	if ((pid = fork()) < 0)
 		return (ft_fdprintf(2, E_ERR, "Cannot fork"), false);
@@ -92,8 +91,7 @@ t_bool			start_script(t_env *env)
 		_exit(0);
 	}
 	close(slave);
-	read_script(env, pid, master);
-	waitpid(pid, NULL, 0);
-	restore_term(env, slave);
+	read_script(env, master);
+	restore_term(env);
 	return (true);
 }

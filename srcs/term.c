@@ -6,7 +6,7 @@
 /*   By: jaguillo <jaguillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/28 14:13:29 by jaguillo          #+#    #+#             */
-/*   Updated: 2015/05/28 14:22:38 by jaguillo         ###   ########.fr       */
+/*   Updated: 2015/05/28 18:03:30 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,24 @@
 #include <sys/ioctl.h>
 
 // tcgetattr
-// cfmakeraw
 // tcsetattr
 
-t_bool			init_term(t_env *env, int tty)
+t_bool			init_term(t_env *env)
 {
 	struct termios	tmp;
 
-	tcgetattr(tty, &tmp);
+	if (tcgetattr(0, &tmp) < 0)
+		return (false);
 	env->save_term = tmp;
-	cfmakeraw(&tmp);
-	tcsetattr(tty, TCSANOW, &tmp);
+	tmp.c_lflag &= ~(ECHO | ICANON);
+	tmp.c_cc[VMIN] = 1;
+	tmp.c_cc[VTIME] = 0;
+	if (tcsetattr(0, TCSADRAIN, &tmp))
+		return (false);
 	return (true);
 }
 
-void			restore_term(t_env *env, int tty)
+void			restore_term(t_env *env)
 {
-	tcsetattr(tty, TCSANOW, &(env->save_term));
+	tcsetattr(0, TCSADRAIN, &(env->save_term));
 }
