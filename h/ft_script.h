@@ -6,7 +6,7 @@
 /*   By: jaguillo <jaguillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/03 13:06:59 by jaguillo          #+#    #+#             */
-/*   Updated: 2015/05/27 12:31:05 by juloo            ###   ########.fr       */
+/*   Updated: 2015/05/28 14:16:11 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@
 # define DEFAULT_SHELL	"/bin/sh"
 # define DEFAULT_FILE	"typescript"
 
-# define TERM_FD		0
-
 # define READ_O			(O_RDONLY)
 # define WRITE_O		(O_WRONLY | O_CREAT | O_TRUNC)
 # define APPEND_O		(O_WRONLY | O_CREAT | O_APPEND)
@@ -51,6 +49,7 @@ typedef struct	s_env
 	char			*out_file;
 	char			**cmd;
 	t_out			out;
+	struct termios	save_term;
 }				t_env;
 
 # define FLAG_A		(1 << 1)
@@ -59,5 +58,10 @@ typedef struct	s_env
 t_bool			parse_argv(t_env *env, int argc, char **argv);
 
 t_bool			start_script(t_env *env);
+
+t_bool			ft_openpt(int *master, int *slave);
+
+t_bool			init_term(t_env *env, int tty);
+void			restore_term(t_env *env, int tty);
 
 #endif

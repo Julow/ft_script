@@ -45,11 +45,13 @@ MAKEMAKE_TMP := tmp_makemake.py
 #
 
 O_FILES := o/srcs/argv.o \
+	o/srcs/ft_openpt.o \
+	o/srcs/script.o \
 	o/srcs/main.o \
-	o/srcs/script.o
+	o/srcs/term.o
 
-MSG_0 := printf '\033[0;32m%-15.15s\033[0;0m\r'
-MSG_1 := printf '\033[0;31m%-15.15s\033[0;0m\n'
+MSG_0 := printf '\033[0;32m%-18.18s\033[0;0m\r'
+MSG_1 := printf '\033[0;31m%-18.18s\033[0;0m\n'
 MSG_END := printf '\n'
 
 .SILENT:
@@ -64,11 +66,19 @@ o/srcs/argv.o: srcs/argv.c h/ft_script.h h/msg.h
 	@mkdir -p o/srcs 2> /dev/null || true
 	@$(MSG_0) $< ; clang $(C_FLAGS) $(C_HEADS) -c -o $@ $< || ($(MSG_1) $< && false)
 
-o/srcs/main.o: srcs/main.c h/ft_script.h h/msg.h
+o/srcs/ft_openpt.o: srcs/ft_openpt.c h/ft_script.h h/msg.h
 	@mkdir -p o/srcs 2> /dev/null || true
 	@$(MSG_0) $< ; clang $(C_FLAGS) $(C_HEADS) -c -o $@ $< || ($(MSG_1) $< && false)
 
 o/srcs/script.o: srcs/script.c h/ft_script.h h/msg.h
+	@mkdir -p o/srcs 2> /dev/null || true
+	@$(MSG_0) $< ; clang $(C_FLAGS) $(C_HEADS) -c -o $@ $< || ($(MSG_1) $< && false)
+
+o/srcs/main.o: srcs/main.c h/ft_script.h h/msg.h
+	@mkdir -p o/srcs 2> /dev/null || true
+	@$(MSG_0) $< ; clang $(C_FLAGS) $(C_HEADS) -c -o $@ $< || ($(MSG_1) $< && false)
+
+o/srcs/term.o: srcs/term.c h/ft_script.h h/msg.h
 	@mkdir -p o/srcs 2> /dev/null || true
 	@$(MSG_0) $< ; clang $(C_FLAGS) $(C_HEADS) -c -o $@ $< || ($(MSG_1) $< && false)
 
