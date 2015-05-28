@@ -6,7 +6,7 @@
 /*   By: jaguillo <jaguillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/03 13:06:59 by jaguillo          #+#    #+#             */
-/*   Updated: 2015/05/28 18:04:17 by jaguillo         ###   ########.fr       */
+/*   Updated: 2015/05/28 19:24:42 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,8 @@ t_bool			ft_openpt(int *master, int *slave);
 
 t_bool			init_term(t_env *env);
 void			restore_term(t_env *env);
+
+int				ft_exec(char **argv, char **env);
+t_bool			ft_subnextc(t_sub *sub, char c);
 
 #endif
