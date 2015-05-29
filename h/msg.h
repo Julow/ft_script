@@ -6,7 +6,7 @@
 /*   By: juloo <juloo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/26 13:31:24 by juloo             #+#    #+#             */
-/*   Updated: 2015/05/26 16:30:44 by juloo            ###   ########.fr       */
+/*   Updated: 2015/05/29 11:46:56 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,11 @@
 # define M_ISDIR		"Is a directory"
 # define M_LOOP			"Too many symbolic links"
 # define M_PATH			"Bad path"
+
+# define M_START		NAME " started, output file is %s" ENDL
+# define M_START_F		NAME " started on %s"
+
+# define M_DONE			ENDL NAME " done, output file is %s" ENDL
+# define M_DONE_F		ENDL NAME " done on %s"
 
 #endif

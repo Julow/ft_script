@@ -6,7 +6,7 @@
 /*   By: jaguillo <jaguillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/03 13:06:59 by jaguillo          #+#    #+#             */
-/*   Updated: 2015/05/28 19:24:42 by jaguillo         ###   ########.fr       */
+/*   Updated: 2015/05/29 11:25:07 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,14 @@ typedef struct	s_env
 
 t_bool			parse_argv(t_env *env, int argc, char **argv);
 
-t_bool			start_script(t_env *env);
-
-t_bool			ft_openpt(int *master, int *slave);
-
 t_bool			init_term(t_env *env);
 void			restore_term(t_env *env);
+
+t_bool			start_script(t_env *env);
+void			script_slave(t_env *env, int slave);
+void			script_master(t_env *env, int master);
+
+t_bool			ft_openpt(int *master, int *slave);
 
 int				ft_exec(char **argv, char **env);
 t_bool			ft_subnextc(t_sub *sub, char c);
