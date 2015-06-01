@@ -6,7 +6,7 @@
 /*   By: jaguillo <jaguillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/03 11:52:52 by jaguillo          #+#    #+#             */
-/*   Updated: 2015/05/26 01:39:21 by juloo            ###   ########.fr       */
+/*   Updated: 2015/06/01 18:11:06 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -368,6 +368,7 @@ int				ft_subtrimr(t_sub *sub, t_is mask);
 int				ft_subtriml(t_sub *sub, t_is mask);
 
 t_bool			ft_subnext(t_sub *sub, t_is mask);
+t_bool			ft_subnextc(t_sub *sub, char c);
 int				ft_subcount(t_sub sub, t_is mask);
 int				ft_subextract(t_sub sub, t_sub *dst, int max, t_is mask);
 
@@ -443,7 +444,9 @@ t_bool			ft_randbool(double chance);
 ** Misc
 */
 
-char			*ft_getenv(const char *key);
+int				ft_exec(char **argv, char **env);
+
+char			*ft_getenv(char const *name, char **env);
 
 void			ft_splitfree(char **split);
 
@@ -535,7 +538,7 @@ typedef struct	s_hmap
 void			ft_hmapini(t_hmap *map, int size, int (*h)(char const*, int));
 void			*ft_hmapget(t_hmap *map, char const *key);
 void			ft_hmapputp(t_hmap *map, char const *key, void *data);
-void			*ft_hmapput(t_hmap *map, char const *key, void const *data, int size);
+void			*ft_hmapput(t_hmap *map, char const *key, void const *d, int l);
 void			*ft_hmapput0(t_hmap *map, char const *key, int size);
 void			ft_hmaprem(t_hmap *map, char const *key, void (*f)(void*));
 void			ft_hmapdestroy(t_hmap *map, void (*f)(void*));
