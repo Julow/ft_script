@@ -38,21 +38,21 @@ LD_FLAGS := -Llibft -lft
 # Clang include flags
 C_HEADS := -Ilibft -Ih
 
-MAKEMAKE_TMP := tmp_makemake.py
-
 #
 # Internal
 #
 
 O_FILES := o/srcs/script_slave.o \
+	o/srcs/script.o \
 	o/srcs/main.o \
 	o/srcs/ft_openpt.o \
 	o/srcs/argv.o \
 	o/srcs/script_master.o \
 	o/srcs/ft_exec.o \
 	o/srcs/ft_subnextc.o \
-	o/srcs/script.o \
-	o/srcs/term.o
+	o/srcs/ft_strerror.o \
+	o/srcs/term.o \
+	o/srcs/ft_tc.o
 
 MSG_0 := printf '\033[0;32m%-22.22s\033[0;0m\r'
 MSG_1 := printf '\033[0;31m%-22.22s\033[0;0m\n'
@@ -67,6 +67,10 @@ $(NAME): $(O_FILES)
 	@$(MSG_0) $@ ; $(LD_CC) -o $@ $(O_FILES) $(LD_FLAGS) && $(MSG_END) || $(MSG_1) $@
 
 o/srcs/script_slave.o: srcs/script_slave.c h/ft_script.h h/msg.h
+	@mkdir -p o/srcs 2> /dev/null || true
+	@$(MSG_0) $< ; clang $(C_FLAGS) $(C_HEADS) -c -o $@ $< || ($(MSG_1) $< && false)
+
+o/srcs/script.o: srcs/script.c h/ft_script.h h/msg.h
 	@mkdir -p o/srcs 2> /dev/null || true
 	@$(MSG_0) $< ; clang $(C_FLAGS) $(C_HEADS) -c -o $@ $< || ($(MSG_1) $< && false)
 
@@ -94,11 +98,15 @@ o/srcs/ft_subnextc.o: srcs/ft_subnextc.c h/ft_script.h h/msg.h
 	@mkdir -p o/srcs 2> /dev/null || true
 	@$(MSG_0) $< ; clang $(C_FLAGS) $(C_HEADS) -c -o $@ $< || ($(MSG_1) $< && false)
 
-o/srcs/script.o: srcs/script.c h/ft_script.h h/msg.h
+o/srcs/ft_strerror.o: srcs/ft_strerror.c h/ft_script.h h/msg.h
 	@mkdir -p o/srcs 2> /dev/null || true
 	@$(MSG_0) $< ; clang $(C_FLAGS) $(C_HEADS) -c -o $@ $< || ($(MSG_1) $< && false)
 
 o/srcs/term.o: srcs/term.c h/ft_script.h h/msg.h
+	@mkdir -p o/srcs 2> /dev/null || true
+	@$(MSG_0) $< ; clang $(C_FLAGS) $(C_HEADS) -c -o $@ $< || ($(MSG_1) $< && false)
+
+o/srcs/ft_tc.o: srcs/ft_tc.c h/ft_script.h h/msg.h
 	@mkdir -p o/srcs 2> /dev/null || true
 	@$(MSG_0) $< ; clang $(C_FLAGS) $(C_HEADS) -c -o $@ $< || ($(MSG_1) $< && false)
 
@@ -117,9 +125,3 @@ fclean: clean
 
 re: fclean all
 .PHONY: re
-
-make: fclean
-	@curl -f https://raw.githubusercontent.com/Julow/makemake/master/makemake.py > $(MAKEMAKE_TMP)
-	@python $(MAKEMAKE_TMP)
-	@rm -f $(MAKEMAKE_TMP)
-.PHONY: make

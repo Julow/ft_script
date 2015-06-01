@@ -6,7 +6,7 @@
 /*   By: jaguillo <jaguillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/29 11:22:30 by jaguillo          #+#    #+#             */
-/*   Updated: 2015/05/29 11:47:44 by jaguillo         ###   ########.fr       */
+/*   Updated: 2015/06/01 14:20:44 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,10 @@ static void		read_script(t_env *env, int master)
 			ft_write(&(env->out), buff, len);
 		}
 	}
-	ft_flush(&(env->out));
 }
 
 void			script_master(t_env *env, int master)
 {
 	read_script(env, master);
+	ft_flush(&(env->out));
 }

@@ -6,7 +6,7 @@
 /*   By: jaguillo <jaguillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/29 11:22:30 by jaguillo          #+#    #+#             */
-/*   Updated: 2015/05/29 11:26:01 by jaguillo         ###   ########.fr       */
+/*   Updated: 2015/06/01 14:20:16 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,22 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 
-#include <string.h> // OMG
-
-// strerror
-
 static void		exec_cmd(t_env *env)
 {
-	char 			*def_cmd[] = {NULL, "-i", NULL};
+	char			*def_cmd[3];
 
+	def_cmd[0] = NULL;
+	def_cmd[1] = "-i";
+	def_cmd[2] = NULL;
 	if (env->cmd == NULL || env->cmd[0] == NULL)
 	{
 		def_cmd[0] = ft_getenv("SHELL");
 		if (def_cmd[0] == NULL)
 			def_cmd[0] = DEFAULT_SHELL;
-		ft_fdprintf(2, ERR, def_cmd[0], strerror(ft_exec(def_cmd, NULL)));
+		ft_fdprintf(2, ERR, def_cmd[0], ft_strerror(ft_exec(def_cmd, NULL)));
 	}
 	else
-		ft_fdprintf(2, ERR, env->cmd[0], strerror(ft_exec(env->cmd, NULL)));
+		ft_fdprintf(2, ERR, env->cmd[0], ft_strerror(ft_exec(env->cmd, NULL)));
 }
 
 void			script_slave(t_env *env, int slave)

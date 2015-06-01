@@ -6,12 +6,12 @@
 /*   By: juloo <juloo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/26 13:31:24 by juloo             #+#    #+#             */
-/*   Updated: 2015/05/29 11:46:56 by jaguillo         ###   ########.fr       */
+/*   Updated: 2015/06/01 14:21:28 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MSH_H
-# define MSH_H
+#ifndef MSG_H
+# define MSG_H
 
 # define NAME			"ft_script"
 # define ENDL			"\n"
@@ -27,7 +27,7 @@
 # define M_LOOP			"Too many symbolic links"
 # define M_PATH			"Bad path"
 
-# define M_START		NAME " started, output file is %s" ENDL
+# define M_START		NAME " started, output file is %s" ENDL "\r"
 # define M_START_F		NAME " started on %s"
 
 # define M_DONE			ENDL NAME " done, output file is %s" ENDL

@@ -6,7 +6,7 @@
 /*   By: juloo <juloo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/26 16:28:38 by juloo             #+#    #+#             */
-/*   Updated: 2015/05/29 11:44:50 by jaguillo         ###   ########.fr       */
+/*   Updated: 2015/06/01 14:21:14 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/time.h>
-
-// ctime
 
 static void		print_start(t_env *env)
 {

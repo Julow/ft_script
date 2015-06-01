@@ -6,7 +6,7 @@
 /*   By: jaguillo <jaguillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/03 13:06:59 by jaguillo          #+#    #+#             */
-/*   Updated: 2015/05/29 11:25:07 by jaguillo         ###   ########.fr       */
+/*   Updated: 2015/06/01 14:06:41 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,10 @@ void			script_slave(t_env *env, int slave);
 void			script_master(t_env *env, int master);
 
 t_bool			ft_openpt(int *master, int *slave);
+
+int				ft_tcsetattr(int fd, struct termios *t);
+int				ft_tcgetattr(int fd, struct termios *t);
+char const		*ft_strerror(int err);
 
 int				ft_exec(char **argv, char **env);
 t_bool			ft_subnextc(t_sub *sub, char c);
