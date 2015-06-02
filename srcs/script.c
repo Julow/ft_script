@@ -6,7 +6,7 @@
 /*   By: juloo <juloo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/26 16:28:38 by juloo             #+#    #+#             */
-/*   Updated: 2015/06/01 14:21:14 by jaguillo         ###   ########.fr       */
+/*   Updated: 2015/06/02 13:33:28 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ static void		print_start(t_env *env)
 {
 	struct timeval	tp;
 
+	if (env->flags & FLAG_Q)
+		return ;
 	gettimeofday(&tp, NULL);
 	ft_printf(M_START, env->out_file);
 	ft_writef(&(env->out), M_START_F, ctime(&(tp.tv_sec)));
@@ -30,6 +32,8 @@ static void		print_done(t_env *env)
 {
 	struct timeval	tp;
 
+	if (env->flags & FLAG_Q)
+		return ;
 	gettimeofday(&tp, NULL);
 	ft_printf(M_DONE, env->out_file);
 	ft_writef(&(env->out), M_DONE_F, ctime(&(tp.tv_sec)));
