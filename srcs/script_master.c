@@ -6,7 +6,7 @@
 /*   By: jaguillo <jaguillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/29 11:22:30 by jaguillo          #+#    #+#             */
-/*   Updated: 2015/06/02 17:01:59 by jaguillo         ###   ########.fr       */
+/*   Updated: 2015/06/02 17:20:09 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,11 @@ static void		flush_script(t_env *env)
 	struct timeval	tp;
 
 	gettimeofday(&tp, NULL);
-	if (tp.tv_sec > env->next_flush)
+	if (tp.tv_sec >= env->next_flush)
 	{
 		env->next_flush = env->flush_interval + tp.tv_sec;
 		ft_flush(&(env->out));
+		fsync(env->out.fd);
 	}
 }
 
@@ -33,18 +34,18 @@ static t_bool	read_script(t_env *env, int master)
 	fd_set			read_fds;
 	int				len;
 	char			buff[INPUT_BUFFER];
-	struct timeval	tp;
 
-	tp = (struct timeval){0, 0};
 	FD_ZERO(&read_fds);
 	FD_SET(0, &read_fds);
 	FD_SET(master, &read_fds);
-	if (select(master + 1, &read_fds, NULL, NULL, &tp) < 0)
+	if (select(master + 1, &read_fds, NULL, NULL, &(struct timeval){0, 0}) < 0)
 		return (ft_fdprintf(2, E_ERR, "Cannot select"), false);
 	if (FD_ISSET(0, &read_fds))
 	{
 		if ((len = read(0, buff, INPUT_BUFFER)) <= 0)
 			return (false);
+		if (env->flags & FLAG_K)
+			ft_write(&(env->out), buff, len);
 		write(master, buff, len);
 	}
 	if (FD_ISSET(master, &read_fds))

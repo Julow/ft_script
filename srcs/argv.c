@@ -6,7 +6,7 @@
 /*   By: juloo <juloo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/26 13:23:52 by juloo             #+#    #+#             */
-/*   Updated: 2015/06/02 17:03:30 by jaguillo         ###   ########.fr       */
+/*   Updated: 2015/06/02 17:18:37 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,14 @@
 #include "msg.h"
 #include <unistd.h>
 
+const t_opt		g_opts[] = {
+	{"a", "append", false, &parse_opt},
+	{"q", "quiet", false, &parse_opt},
+	{"h", "help", false, &parse_opt},
+	{"k", "key", false, &parse_opt},
+	{"t", "time", true, &parse_opt_time}
+};
+
 static void		usage(void)
 {
 	ft_fdprintf(2, "\n"
@@ -22,15 +30,16 @@ static void		usage(void)
 		" ft_script [options] [file [command ...]]\n"
 		"\n"
 		"Options:\n"
-		" -a, --append   append the output\n"
-		" -q, --quiet    quiet mode\n"
+		" -a, --append    append the output\n"
+		" -q, --quiet     quiet mode\n"
 		" -t <time>,\n"
-		" --time=<time>  set flush interval (default 30)\n"
-		" -h, --help     display this message and exit\n"
+		" --time=<time>   set flush interval (default 30)\n"
+		" -k, --key       log keys\n"
+		" -h, --help      display this message and exit\n"
 		"\n");
 }
 
-static t_bool	parse_opt_time(t_env *env, t_args *args, char *opt, char *arg)
+t_bool			parse_opt_time(t_env *env, t_args *args, char *opt, char *arg)
 {
 	if (!ft_sisint(arg) || (env->flush_interval = ft_atoi(arg)) < 0)
 		return (ft_fdprintf(2, E_ERR, "Invalid time argument"), false);
@@ -39,12 +48,14 @@ static t_bool	parse_opt_time(t_env *env, t_args *args, char *opt, char *arg)
 	(void)args;
 }
 
-static t_bool	parse_opt(t_env *env, t_args *args, char *opt)
+t_bool			parse_opt(t_env *env, t_args *args, char *opt)
 {
 	if (*opt == 'a')
 		env->flags |= FLAG_A;
 	else if (*opt == 'q')
 		env->flags |= FLAG_Q;
+	else if (*opt == 'k')
+		env->flags |= FLAG_K;
 	else if (*opt == 'h')
 	{
 		usage();
@@ -53,13 +64,6 @@ static t_bool	parse_opt(t_env *env, t_args *args, char *opt)
 	return (true);
 	(void)args;
 }
-
-const t_opt		g_opts[] = {
-	{"a", "append", false, &parse_opt},
-	{"q", "quiet", false, &parse_opt},
-	{"h", "help", false, &parse_opt},
-	{"t", "time", true, &parse_opt_time}
-};
 
 t_bool			parse_argv(t_env *env, int argc, char **argv)
 {

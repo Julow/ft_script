@@ -6,7 +6,7 @@
 /*   By: jaguillo <jaguillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/03 13:06:59 by jaguillo          #+#    #+#             */
-/*   Updated: 2015/06/02 16:44:37 by jaguillo         ###   ########.fr       */
+/*   Updated: 2015/06/02 17:19:12 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 # include "ft_argv.h"
 
 # include <termios.h>
-
-# define static		static inline
 
 /*
 ** ========================================================================== **
@@ -62,8 +60,11 @@ typedef struct	s_env
 
 # define FLAG_A		(1 << 1)
 # define FLAG_Q		(1 << 2)
+# define FLAG_K		(1 << 3)
 
 t_bool			parse_argv(t_env *env, int argc, char **argv);
+t_bool			parse_opt_time(t_env *env, t_args *args, char *opt, char *arg);
+t_bool			parse_opt(t_env *env, t_args *args, char *opt);
 
 t_bool			init_term(t_env *env);
 void			restore_term(t_env *env);
