@@ -6,7 +6,7 @@
 /*   By: juloo <juloo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/26 13:23:52 by juloo             #+#    #+#             */
-/*   Updated: 2015/05/26 15:02:25 by juloo            ###   ########.fr       */
+/*   Updated: 2015/06/02 17:03:30 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,28 +24,42 @@ static void		usage(void)
 		"Options:\n"
 		" -a, --append   append the output\n"
 		" -q, --quiet    quiet mode\n"
+		" -t <time>,\n"
+		" --time=<time>  set flush interval (default 30)\n"
 		" -h, --help     display this message and exit\n"
 		"\n");
 }
 
-static t_bool	parse_opt(t_env *env, t_args *args)
+static t_bool	parse_opt_time(t_env *env, t_args *args, char *opt, char *arg)
 {
-	char			*opt;
-
-	while ((opt = ft_argvopt(args)) != NULL)
-		if (ft_strequ(opt, "a") || ft_strequ(opt, "append"))
-			env->flags |= FLAG_A;
-		else if (ft_strequ(opt, "q") || ft_strequ(opt, "quiet"))
-			env->flags |= FLAG_Q;
-		else if (ft_strequ(opt, "h") || ft_strequ(opt, "help"))
-		{
-			usage();
-			_exit(0);
-		}
-		else
-			return (ft_fdprintf(2, E_OPT, opt), false);
+	if (!ft_sisint(arg) || (env->flush_interval = ft_atoi(arg)) < 0)
+		return (ft_fdprintf(2, E_ERR, "Invalid time argument"), false);
 	return (true);
+	(void)opt;
+	(void)args;
 }
+
+static t_bool	parse_opt(t_env *env, t_args *args, char *opt)
+{
+	if (*opt == 'a')
+		env->flags |= FLAG_A;
+	else if (*opt == 'q')
+		env->flags |= FLAG_Q;
+	else if (*opt == 'h')
+	{
+		usage();
+		_exit(0);
+	}
+	return (true);
+	(void)args;
+}
+
+const t_opt		g_opts[] = {
+	{"a", "append", false, &parse_opt},
+	{"q", "quiet", false, &parse_opt},
+	{"h", "help", false, &parse_opt},
+	{"t", "time", true, &parse_opt_time}
+};
 
 t_bool			parse_argv(t_env *env, int argc, char **argv)
 {
@@ -53,7 +67,7 @@ t_bool			parse_argv(t_env *env, int argc, char **argv)
 	char			*arg;
 
 	args = ARGS(argc, argv);
-	if (!parse_opt(env, &args))
+	if (!ft_argv(&args, g_opts, sizeof(g_opts) / sizeof(t_opt), env))
 		return (usage(), false);
 	if ((arg = ft_argvarg(&args)) != NULL)
 		env->out_file = arg;

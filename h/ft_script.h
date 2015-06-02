@@ -6,7 +6,7 @@
 /*   By: jaguillo <jaguillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/03 13:06:59 by jaguillo          #+#    #+#             */
-/*   Updated: 2015/06/01 14:06:41 by jaguillo         ###   ########.fr       */
+/*   Updated: 2015/06/02 16:44:37 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,11 @@
 # define FT_SCRIPT_H
 
 # include "libft.h"
+# include "ft_argv.h"
+
 # include <termios.h>
+
+# define static		static inline
 
 /*
 ** ========================================================================== **
@@ -35,6 +39,8 @@
 # define DEFAULT_SHELL	"/bin/sh"
 # define DEFAULT_FILE	"typescript"
 
+# define FLUSH_INTERVAL	30
+
 # define READ_O			(O_RDONLY)
 # define WRITE_O		(O_WRONLY | O_CREAT | O_TRUNC)
 # define APPEND_O		(O_WRONLY | O_CREAT | O_APPEND)
@@ -49,6 +55,8 @@ typedef struct	s_env
 	char			*out_file;
 	char			**cmd;
 	t_out			out;
+	int				flush_interval;
+	int				next_flush;
 	struct termios	save_term;
 }				t_env;
 
@@ -72,5 +80,44 @@ char const		*ft_strerror(int err);
 
 int				ft_exec(char **argv, char **env);
 t_bool			ft_subnextc(t_sub *sub, char c);
+
+/*
+** ========================================================================== **
+** ft_argv
+** ----
+** Iter over options using ft_argvopt
+** Take an array of t_opt:
+**  t_opt.opt     Opt name (first arg of t_opt.f)
+**  t_opt.alias   Opt name (compared with result of ft_argvopt)
+**  t_opt.arg     If require a argument
+**  t_opt.f       Callback(opt name, argument if t_opt.arg else NULL)
+** ----
+** t_bool			callback(void *data, t_args *args, char *opt, char *arg);
+**  If the callback function return false, ft_argv stop
+** ----
+** Warning: An empty opt name cause an undefined behavior
+** TODO: Add const to t_opt.opt and callback arguments
+** ----
+** Return false if an option fail or does not exists
+** true otherwise
+*/
+
+typedef struct	s_opt
+{
+	char			*opt;
+	char const		*alias;
+	t_bool			arg;
+	t_bool			(*f)();
+}				t_opt;
+
+t_bool			ft_argv(t_args *args, t_opt const *opts, int len, void *data);
+
+/*
+** Error messages
+**  E_ARGV_NO      Option does not exists
+**  E_ARGV_ARG     t_opt.arg is true and there is no argment
+*/
+# define E_ARGV_NO		"%s: -%s: unknown option\n"
+# define E_ARGV_ARG		"%s: -%s: need an argument\n"
 
 #endif

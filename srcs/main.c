@@ -6,7 +6,7 @@
 /*   By: jaguillo <jaguillo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/03/03 13:07:18 by jaguillo          #+#    #+#             */
-/*   Updated: 2015/05/26 23:46:12 by juloo            ###   ########.fr       */
+/*   Updated: 2015/06/02 16:34:42 by jaguillo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ int				main(int argc, char **argv)
 	ft_bzero(&env, sizeof(t_env));
 	env.out_file = DEFAULT_FILE;
 	env.out = OUT(0, out_buff, OUTPUT_BUFFER);
+	env.flush_interval = FLUSH_INTERVAL;
+	env.next_flush = 0;
 	if (!parse_argv(&env, argc, argv) || !init_file(&env)
 		|| !start_script(&env))
 		return (1);

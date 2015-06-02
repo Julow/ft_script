@@ -46,6 +46,7 @@ O_FILES := o/srcs/script_slave.o \
 	o/srcs/script.o \
 	o/srcs/main.o \
 	o/srcs/ft_openpt.o \
+	o/srcs/ft_argv.o \
 	o/srcs/argv.o \
 	o/srcs/script_master.o \
 	o/srcs/ft_exec.o \
@@ -79,6 +80,10 @@ o/srcs/main.o: srcs/main.c h/ft_script.h h/msg.h
 	@$(MSG_0) $< ; clang $(C_FLAGS) $(C_HEADS) -c -o $@ $< || ($(MSG_1) $< && false)
 
 o/srcs/ft_openpt.o: srcs/ft_openpt.c h/ft_script.h h/msg.h
+	@mkdir -p o/srcs 2> /dev/null || true
+	@$(MSG_0) $< ; clang $(C_FLAGS) $(C_HEADS) -c -o $@ $< || ($(MSG_1) $< && false)
+
+o/srcs/ft_argv.o: srcs/ft_argv.c h/ft_script.h h/msg.h
 	@mkdir -p o/srcs 2> /dev/null || true
 	@$(MSG_0) $< ; clang $(C_FLAGS) $(C_HEADS) -c -o $@ $< || ($(MSG_1) $< && false)
 
